@@ -1,0 +1,7 @@
+@extends('layout')
+
+@section('content')
+
+tiffany is a lovie and dan is a dovie
+
+@stop

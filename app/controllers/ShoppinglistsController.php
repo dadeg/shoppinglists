@@ -1,0 +1,160 @@
+<?php
+
+class ShoppinglistsController extends BaseController
+{
+	public function index()
+	{
+		//show a list of all shopping lists
+		$shoppinglists = Auth::user()->shoppinglists;
+
+		return View::make('index', compact('shoppinglists'));
+	}
+
+	public function details(Shoppinglist $shoppinglist)
+	{
+		//make sure the user is the author
+
+		if(!$shoppinglist->isAuthor(Auth::user()->id))
+		{
+			return View::make('unauthorized');
+		}	
+	
+		//show an individual list
+		return View::make('details', compact('shoppinglist'));
+	}
+
+	public function create()
+	{
+		//show form for creating a list
+		return View::make('create');
+	}
+
+	public function handleCreate()
+	{
+		//handle create form submission
+		$shoppinglist = new Shoppinglist;
+
+		if($shoppinglist->validate(Input::all()))
+		{
+			//validation passed, save the model
+			
+			//get the user's id and create the 
+			$user = Auth::user();
+			$shoppinglist->user()->associate($user);			
+
+			$shoppinglist->name = Input::get('name');
+			$shoppinglist->monday = Input::get('monday');
+			$shoppinglist->tuesday = Input::get('tuesday');
+			$shoppinglist->wednesday = Input::get('wednesday');
+			$shoppinglist->thursday = Input::get('thursday');
+			$shoppinglist->friday = Input::get('friday');
+			$shoppinglist->saturday = Input::get('saturday');
+			$shoppinglist->sunday = Input::get('sunday');
+			$shoppinglist->fruit = Input::get('fruit');
+			$shoppinglist->vegetable = Input::get('vegetable');
+			$shoppinglist->dairy = Input::get('dairy');
+			$shoppinglist->meatsub = Input::get('meatsub');
+			$shoppinglist->meat = Input::get('meat');
+			$shoppinglist->grain = Input::get('grain');
+			$shoppinglist->drygoods = Input::get('drygoods');
+			$shoppinglist->other = Input::get('other');
+			
+			$shoppinglist->save();
+	
+			return Redirect::action('ShoppinglistsController@index');
+
+		}
+		else
+		{
+			//failed validation.
+			$errors = $shoppinglist->messages();
+			Input::flash();
+			return Redirect::action('ShoppinglistsController@create')->withErrors($errors);
+		}
+		
+	}
+
+	public function edit(Shoppinglist $shoppinglist)
+	{
+		//make sure the user is the author
+		if($shoppinglist->isAuthor(Auth::user()->id))
+		{
+			return View::make('unauthorized');
+		}
+		
+		//show edit form
+		return View::make('edit', compact('shoppinglist'));
+	}
+
+	public function handleEdit()
+	{
+		//handle edit form submission
+		$shoppinglist = Shoppinglist::findOrFail(Input::get('id'));
+		
+		//make sure the user is the author
+		if($shoppinglist->isAuthor(Auth::user()->id))
+		{
+			return View::make('unauthorized');
+		}
+
+		if($shoppinglist->validate(Input::all()))
+		{
+			$shoppinglist->name = Input::get('name');
+			$shoppinglist->monday = Input::get('monday');
+			$shoppinglist->tuesday = Input::get('tuesday');
+			$shoppinglist->wednesday = Input::get('wednesday');
+			$shoppinglist->thursday = Input::get('thursday');
+			$shoppinglist->friday = Input::get('friday');
+			$shoppinglist->saturday = Input::get('saturday');
+			$shoppinglist->sunday = Input::get('sunday');
+			$shoppinglist->fruit = Input::get('fruit');
+			$shoppinglist->vegetable = Input::get('vegetable');
+			$shoppinglist->dairy = Input::get('dairy');
+			$shoppinglist->meatsub = Input::get('meatsub');
+			$shoppinglist->meat = Input::get('meat');
+			$shoppinglist->grain = Input::get('grain');
+			$shoppinglist->drygoods = Input::get('drygoods');
+			$shoppinglist->other = Input::get('other');
+			$shoppinglist->save();
+
+			return Redirect::action('ShoppinglistsController@index');
+		}
+		else
+		{
+			//validation did not pass. send back to form for correcting.
+			$errors = $shoppinglist->messages();
+			Input::flash();
+			return Redirect::action('ShoppinglistsController@edit', $shoppinglist->id)->withErrors($errors);
+		
+		}
+	}
+
+	public function delete(Shoppinglist $shoppinglist)
+	{
+		//make sure the user is the author
+		if($shoppinglist->isAuthor(Auth::user()->id))
+		{
+			return View::make('unauthorized');
+		}
+
+		//show page to confirm delete
+		return View::make('delete', compact('shoppinglist'));
+	}
+
+	public function handleDelete()
+	{
+		//handle delete submission
+		$id = Input::get('shoppinglist');
+		$shoppinglist = Shoppinglist::findOrFail($id);
+		
+		//make sure the user is the author
+		if($shoppinglist->isAuthor(Auth::user()->id))
+		{
+			return View::make('unauthorized');
+		}
+
+		$shoppinglist->delete();
+
+		return Redirect::action('ShoppinglistsController@index');
+	}
+}

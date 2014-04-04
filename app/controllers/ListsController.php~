@@ -1,0 +1,53 @@
+<?php
+
+class ShoppinglistsController extends BaseController
+{
+	public function index()
+	{
+		//show a list of all shopping lists
+		$shoppinglists = Shoppinglist::all();
+
+		return View::make('index', 'shoppinglists');
+	}
+
+	public function details(Shoppinglist $shoppinglist)
+	{
+		//show an individual list
+		return View::make('details');
+	}
+
+	public function create()
+	{
+		//show form for creating a list
+		return View::make('create');
+	}
+
+	public function handleCreate()
+	{
+		//handle create form submission
+		
+	}
+
+	public function edit(Shoppinglist $shoppinglist)
+	{
+		//show edit form
+		return View::make('edit');
+	}
+
+	public function handleEdit()
+	{
+		//handle edit form submission
+		
+	}
+
+	public function delete(Shoppinglist $shoppinglist)
+	{
+		//show page to confirm delete
+		return View::make('delete');
+	}
+
+	public function handleDelete()
+	{
+		//handle delete submission
+	}
+}

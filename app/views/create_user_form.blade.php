@@ -1,0 +1,30 @@
+@extends('layout')
+
+@section('content')
+    <div class="page-header">
+        <h1>Create Your Account</h1>
+    </div>
+    {{ Form::open(array('action' => 'UsersController@handleCreate')) }}
+		<p>
+		{{ $errors->first('username', '<span class="error">:message</span>') }}
+        	{{ Form::label('username','Username') }}
+		{{ Form::text('username') }}
+		</p><p>
+		{{ $errors->first('email', '<span class="error">:message</span>') }}
+        	{{ Form::label('email', 'Email') }}
+		{{ Form::text('email') }}
+		</p><p>
+		{{ $errors->first('password', '<span class="error">:message</span>') }}
+        	{{ Form::label('password', 'Password') }}
+		{{ Form::password('password') }}
+		</p><p>
+		{{ Form::label('password_confirmation', 'Confirm Password') }}
+		{{ Form::password('password_confirmation') }}
+		</p>
+		{{ Form::submit('Create Account', array('class' => 'btn btn-primary')) }}
+
+<a href="{{ action('UsersController@login') }}" class="btn btn-default">Already Have an Account? Login!</a>
+
+		
+    {{ Form::close() }}
+@stop
